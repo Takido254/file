@@ -1,5 +1,5 @@
 #!/usr/local/bin/perl
-#http://www.binarytides.com/syn-flood-program-in-perl-using-raw-sockets-linux/
+
 #Program to send out tcp syn packets using raw sockets on linux
 
 use Socket;
@@ -12,7 +12,7 @@ $dst_port = $ARGV[3]; # The Destination Port.
 if(!defined $src_host or !defined $src_port or !defined $dst_host or !defined $dst_port) 
 {
 	# print usage instructions
-	print "Usage: $0 <source host> <source port> <dest host> <dest port>\n";
+	print &quot;Usage: $0 &lt;source host&gt; &lt;source port&gt; &lt;dest host&gt; &lt;dest port&gt;\n&quot;;
 	exit;
 } 
 else 
@@ -57,7 +57,7 @@ sub makeheaders
 	my $seq = 13456;
 	my $seq_ack = 0;
 	
-	my $tcp_doff = "5";
+	my $tcp_doff = &quot;5&quot;;
 	my $tcp_res = 0;
 	my $tcp_doff_res = $tcp_doff . $tcp_res;
 	
@@ -82,7 +82,7 @@ sub makeheaders
 	
 	my $tcp_pseudo = pack('a4a4CCn' , $src_host, $dst_host, 0, $IPPROTO_TCP, length($tcp_header) ) . $tcp_header;
 	
-	$tcp_check = &checksum($tcp_pseudo);
+	$tcp_check = &amp;checksum($tcp_pseudo);
 	
 	#create tcp header with checksum = 0
 	my $tcp_header = pack('nnNNH2B8nvn' , $src_port , $dst_port , $seq, $seq_ack , $tcp_doff_res, $tcp_flags,  $tcp_win , $tcp_check, $tcp_urg_ptr);
@@ -97,8 +97,8 @@ sub makeheaders
 	my $ip_frag_id = 19245;
 	my $ip_ttl = 25;
 	my $ip_proto = $IPPROTO_TCP;	# 6 for tcp
-	my $ip_frag_flag = "010";
-	my $ip_frag_oset = "0000000000000";
+	my $ip_frag_flag = &quot;010&quot;;
+	my $ip_frag_oset = &quot;0000000000000&quot;;
 	my $ip_fl_fr = $ip_frag_flag . $ip_frag_oset;
 	
 	# ip header
@@ -125,13 +125,13 @@ sub checksum
 	$num_short = $len_msg / 2;
 	$chk = 0;
 	
-	foreach $short (unpack("S$num_short", $msg)) 
+	foreach $short (unpack(&quot;S$num_short&quot;, $msg)) 
 	{
 		$chk += $short;
 	}
 	
-	$chk += unpack("C", substr($msg, $len_msg - 1, 1)) if $len_msg % 2;
-	$chk = ($chk >> 16) + ($chk & 0xffff);
+	$chk += unpack(&quot;C&quot;, substr($msg, $len_msg - 1, 1)) if $len_msg % 2;
+	$chk = ($chk &gt;&gt; 16) + ($chk &amp; 0xffff);
 	
-	return(~(($chk >> 16) + $chk) & 0xffff);
-} 
+	return(~(($chk &gt;&gt; 16) + $chk) &amp; 0xffff);
+}
